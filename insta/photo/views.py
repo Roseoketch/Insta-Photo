@@ -1,158 +1,137 @@
-from __future__ import absolute_import
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
+from django.http import HttpResponse,Http404
+from .models import Image,Profile,Comment
+from .forms import EditProfileForm,UploadForm,CommentForm
 from django.contrib.auth.models import User
-# from django.contrib import messages
-# from django.db import transaction
-# from django.http import Http404
-# from .forms import UserForm,ProfileForm,PostForm,ProfilePicForm,NewCommentsForm
-# from .models import Posts, Like, Profile, Follow, Comments
-import datetime as dt
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
-from vote.managers import VotableManager
 
-#votes
-votes = VotableManager()
-
-
-@login_required(login_url='/accounts/register/')
-def index(request):
+# Create your views here.
+@login_required(login_url='/accounts/login/')
+def home(request):
+    title = 'Insta-Gram'
     current_user = request.user
-    post = Posts.get_posts()
-
-    # follow other users
-    return render(request, 'index.html',{"post":post,"user":current_user})
+    profile = Profile.get_profile()
+    image = Image.get_images()
+    comments = Comment.get_comment()
+    return render(request,'index.html',{"title":title,
+                                        "profile":profile,
+                                        "comments":comments,
+                                        "current_user":current_user,
+                                        "images":image,})
 
 @login_required(login_url='/accounts/login/')
-def homepage(request):
-    return render(request, 'homepage.html')
+def profile(request):
+    title = 'Insta-Gram'
+    current_user = request.user
+    profile = Profile.get_profile()
+    image = Image.get_images()
+    comments = Comment.get_comment()
+    return render(request,'profile/profile.html',{"title":title,
+                                                  "comments":comments,
+                                                  "image":image,
+                                                  "user":current_user,
+                                                  "profile":profile,})
 
-def logout(request):
-    return render(request, 'index.html')
 
-@login_required
-@transaction.atomic
-def update_profile(request,username):
-    if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, instance=request.user.profile)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request, ('Your profile was successfully updated!'))
-            return redirect('home')
-        else:
-            messages.error(request, ('Please correct the error below.'))
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
-    return render(request, 'profiles/edit_profile.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
+@login_required(login_url='/accounts/login/')
+def settings(request):
+    title = 'Insta-Gram'
+    settings = Profile.get_profile()
+    return render(request,'profile/settings.html',{"settings":settings,
+                                                    "title":title,})
 
-@login_required
-def profile(request,username):
-    try:
-        user = User.objects.get(username=username)
-        profile_pic = Profile.objects.filter(user_id=user).all().order_by('-id')
-        post = Posts.objects.filter(user_id=user).all().order_by('-id')
-    except ObjectDoesNotExist:
-        raise Http404()
-
-    return render(request, 'profiles/profile.html', {"post":post, "user":user, "profile_pic":profile_pic})
-
-@login_required
-def posts(request):
-    if request.method == 'POST':
-        post_form = PostForm(request.POST,files =request.FILES)
-        if post_form.is_valid():
-            single_post = Posts(user =request.user ,image = request.FILES['image'], description = request.POST['description'] )
-            single_post.save()
-            messages.success(request, ('Your post was successfully updated!'))
-            return redirect(reverse('profiles', kwargs = {'username': request.user.username}))
-        else:
-            messages.error(request, ('Please correct the error below.'))
-    else:
-        post_form = PostForm()
-    return render(request,'profiles/post.html', {
-        'post_form': post_form
-    })
-
-# update profile pic
-def profile_pic_update(request, username):
+@login_required(login_url='/accounts/login/')
+def edit(request):
+    title = 'Insta-Gram'
     current_user = request.user
     if request.method == 'POST':
-        form = ProfilePicForm(request.POST, files=request.FILES)
+        form = EditProfileForm(request.POST,request.FILES)
         if form.is_valid():
-            single_profile = form.save(commit = False)
-            single_profile.user = current_user
-            single_profile.save()
-            return redirect(reverse('profile', kwargs={'username': request.user.username}))
+            update = form.save(commit=False)
+            update.user = current_user
+            update.save()
+            return redirect('profile')
     else:
-        form = ProfilePicForm()
-        return render(request,'profiles/update_profilepic.html', {'form':form})
+        form = EditProfileForm()
+    return render(request,'profile/edit.html',{"title":title,
+                                                "form":form})
 
-
-
-# like/upvote post
-@login_required (login_url='/accounts/register/')
-def upvote_posts(request, pk):
-    post = Posts.get_single_post(pk)
-    user = request.user
-    user_id = user.id
-
-    if user.is_authenticated:
-        upvote = post.votes.up(user_id)
-        print(upvote)
-        post.upvote_count = post.votes.count()
-        post.save()
-    return redirect('home')
-
-# dislike/downvote post
-@login_required (login_url='/accounts/register/')
-def downvote_posts(request, pk):
-    post = Posts.get_single_post(pk)
-    user = request.user
-    user_id = user.id
-
-    if user.is_authenticated:
-        downvote = post.votes.down(user_id)
-        print(post.id)
-        print(downvote)
-        print(post.vote_score)
-        post.downvote_count = post.votes.count()
-        post.save()
-
-    return redirect('home')
-
-# follow
-@login_required (login_url='/accounts/register/')
-def follow(request,pk):
+@login_required(login_url="/accounts/login/")
+def upload(request):
+    title = 'Insta-Gram'
     current_user = request.user
-    follow_profile = Profile.objects.get(pk)
-    following = Follow(user=current_user, profile=follow_profile)
-    following.save()
-    return redirect('follow')
+    profiles = Profile.get_profile()
+    for profile in profiles:
+        if profile.user.id == current_user.id:
+            if request.method == 'POST':
+                form = UploadForm(request.POST,request.FILES)
+                if form.is_valid():
+                    upload = form.save(commit=False)
+                    upload.user = current_user
+                    upload.profile = profile
+                    upload.save()
+                    return redirect('home')
+            else:
+                form = UploadForm()
+            return render(request,'upload/new.html',{"title":title,
+                                                    "user":current_user,
+                                                    "form":form})
 
-
-# comment section
-@login_required (login_url='/accounts/register/')
-def comment(request,pk):
+@login_required(login_url="/accounts/login/")
+def search_results(request):
     current_user = request.user
-    post = Posts.get_single_post(pk)
-    comments = Comments.get_post_comment(post.id)
-    form = NewCommentsForm(request.POST)
+    profile = Profile.get_profile()
+    if 'username' in request.GET and request.GET["username"]:
+        search_term = request.GET.get("username")
+        searched_name = Profile.find_profile(search_term)
+        message = search_term
+
+        return render(request,'search.html',{"message":message,
+                                             "profiles":profile,
+                                             "user":current_user,
+                                             "username":searched_name})
+    else:
+        message = "You haven't searched for any term"
+        return render(request,'search.html',{"message":message})
+
+@login_required(login_url='/accounts/login/')
+def new_comment(request,pk):
+    image = get_object_or_404(Image, pk=pk)
+    current_user = request.user
     if request.method == 'POST':
-        if form.is_valid:
+        form = CommentForm(request.POST)
+        if form.is_valid():
             comment = form.save(commit=False)
+            comment.image = image
             comment.user = current_user
-            comment.post = post
-            comment.image_id = post.id
             comment.save()
             return redirect('home')
-        else:
-            form = NewCommentsForm()
-    return render(request, 'comments/new_comment.html', {"form":form, "post":post, "comments":comments})
+    else:
+        form = CommentForm()
+    return render(request, 'comment.html', {"user":current_user,
+                                            "comment_form":form})
+
+@login_required(login_url="/accounts/login/")
+def view_your_profile(request,pk):
+    title =  "Insta-gram"
+    current_user = request.user
+    image = Image.get_images()
+    profile = Profile.get_profile()
+    comment = Comment.get_comment()
+    user = get_object_or_404(User, pk=pk)
+    return render(request,'profile/view.html',{"user":current_user,
+                                               "images":image,
+                                               "my_user":user,
+                                               "comments":comment,
+                                               "profile":profile})
+
+@login_required(login_url="/accounts/login/")
+def like(request,operation,pk):
+    image = get_object_or_404(Image,pk=pk)
+    if operation == 'like':
+        image.likes += 1
+        image.save()
+    elif operation =='unlike':
+        image.likes -= 1
+        image.save()
+    return redirect('home')
