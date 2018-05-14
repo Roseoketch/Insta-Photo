@@ -20,7 +20,8 @@
           <img src="{{img.image.url}}" alt="" class="img-fluid" style="width:80%; height:100%">
           <hr>
 
-          <div class="icons mt-3"><a href="{% url 'comment' pk=img.id %}" class="btn btn-primary"   class="far fa-comment fa-2x ml-4">Comment</a>
+          <div class="icons mt-3"><a href="{% url 'comment' pk=img.id %}" class="btn btn-primary"   class="far fa-comment fa-2x ml-4" style="font-family: 'Josefin Slab', serif;
+ font-size:20px;">Comment</a>
             <a id="like" href="{% url 'like' operation='like' pk=img.id%}" style="color:inherit;"><i class="far fa-heart fa-2x ml-4"></i></a>
             <!-- <a href="{% url 'comment' pk=img.id %}" style="color:inherit;"><i class="far fa-comment fa-2x ml-4"></i></a> -->
             <a href="#" style="color:inherit;"><i class="far fa-bookmark fa-2x float-right mr-4"></i></a>
@@ -42,11 +43,6 @@
           <hr> {% for comment in comments %} {% if img.id == comment.image.id %}
           <p><b>{{comment.user}}</b> {{comment.comments}}</p>
           {% endif %} {% endfor %}
-           <style media="screen">
-           .container mt-5{
-             height: 100px;
-           }
-           </style>
 
         </div>
 
@@ -56,7 +52,8 @@
       {% endif %}
       <br><br> {% endfor %}
     </div>
-    <div class="col-md-4">Coding in a journey, be firm to it</div>
+    <div class="col-md-4" style="font-family: 'Fugaz One', cursive;
+ font-size:20px;">Coding in a journey, be firm to it</div>
   </div>
 
 </div>
