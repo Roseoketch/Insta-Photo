@@ -2,9 +2,8 @@
 <div class="container mt-5">
   <div class="row mt-3"></div>
   <div class="row mt-5">
-    <div class="col-md-2 col-lg-2 col-xs-1 col-sm-1"></div>
 
-    <div class="col-md-8 col-lg-8 col-xs-9 col-sm-9">
+    <div class="col-md-8">
       <p>Hello <b>{{user | title}}</b> <b> Welcome to Instagram</b><a href="{% url 'edit' %}" class="btn btn-primary">Create Profile</a> to Continue.</p>
       {% for img in images %} {% if img.image %}
       <div class="card">
@@ -15,7 +14,7 @@
           <a href="{% url 'yourprofile' pk=img.user.id %}">{{img.user.username}}</a> {% endif %}
         </div>
           <br>
-        <div class="card-body" style="border:2px solid black;">
+        <div class="card-body">
           <img src="{{img.image.url}}" alt="" class="img-fluid" style="width:80%; height:100%">
           <hr>
 
@@ -42,7 +41,9 @@
           <p><b>{{comment.user}}</b> {{comment.comments}}</p>
           {% endif %} {% endfor %}
            <style media="screen">
-
+           .container mt-5{
+             background-color:: 
+           }
            </style>
 
         </div>
@@ -53,7 +54,7 @@
       {% endif %}
       <br><br> {% endfor %}
     </div>
-    <div class="col-md-2 col-lg-2 col-xs-1 col-sm-1"></div>
+    <div class="col-md-4">Coding in a journey, be firm to it</div>
   </div>
 
 </div>
