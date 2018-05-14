@@ -8,13 +8,13 @@
       <p>Hello <b>{{user | title}}</b> are you new here? <a href="{% url 'edit' %}" class="btn btn-primary">Create Profile</a> Before you continue.</p>
       {% for img in images %} {% if img.image %}
       <div class="card">
+
         <div class="card-header">
           <img src="{{img.profile.profilePic.url}}" class="img-fluid rounded-circle" style="width:10%;height:10%"> {% if profile.user.id == img.user.id %}
-          <br>
           <a href="{% url 'profile' %}">{{img.user.username}}</a> {% else %}
           <a href="{% url 'yourprofile' pk=img.user.id %}">{{img.user.username}}</a> {% endif %}
         </div>
-
+          <br>
         <div class="card-body">
           <img src="{{img.image.url}}" alt="" class="img-fluid" style="width:80%; height:100%">
           <hr>
@@ -41,8 +41,6 @@
           <hr> {% for comment in comments %} {% if img.id == comment.image.id %}
           <p><b>{{comment.user}}</b> {{comment.comments}}</p>
           {% endif %} {% endfor %}
-
-
            <style media="screen">
 
            </style>
@@ -51,7 +49,9 @@
         <div class="card-footer">
           <p><a href="{% url 'comment' pk=img.id %}">Add comment</a></p>
         </div>
+
       </div>
+
       {% endif %}
       <br><br> {% endfor %}
     </div>
