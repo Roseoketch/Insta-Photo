@@ -2,12 +2,13 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse,Http404
 from .models import Image,Profile,Comment
-from .forms import EditProfileForm,UploadForm,CommentForm
+# from .forms import EditProfileForm,UploadForm,CommentForm
 from django.contrib.auth.models import User
 
 # Create your views here.
 @login_required(login_url='/accounts/login/')
 def home(request):
+    title = 'Instagram'
     current_user = request.user
     profile = Profile.get_profile()
     image = Image.get_images()
@@ -20,6 +21,7 @@ def home(request):
 
 @login_required(login_url='/accounts/login/')
 def profile(request):
+    title = 'Instagram'
     current_user = request.user
     profile = Profile.get_profile()
     image = Image.get_images()
@@ -33,12 +35,14 @@ def profile(request):
 
 @login_required(login_url='/accounts/login/')
 def settings(request):
+    title = 'Instagram'
     settings = Profile.get_profile()
     return render(request,'profile/settings.html',{"settings":settings,
                                                     "title":title,})
 
 @login_required(login_url='/accounts/login/')
 def edit(request):
+    title = 'Instagram'
     current_user = request.user
     if request.method == 'POST':
         form = EditProfileForm(request.POST,request.FILES)
@@ -54,6 +58,7 @@ def edit(request):
 
 @login_required(login_url="/accounts/login/")
 def upload(request):
+    title = 'Instagram'
     current_user = request.user
     profiles = Profile.get_profile()
     for profile in profiles:
@@ -108,6 +113,7 @@ def new_comment(request,pk):
 
 @login_required(login_url="/accounts/login/")
 def view_your_profile(request,pk):
+    title =  "Insta-gram"
     current_user = request.user
     image = Image.get_images()
     profile = Profile.get_profile()
