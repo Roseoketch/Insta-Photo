@@ -19,7 +19,7 @@
           <img src="{{img.image.url}}" alt="" class="img-fluid" style="width:80%; height:100%">
           <hr>
 
-          <div class="icons mt-3"><a href="{% url 'comment' pk=img.id %}" class="btn btn-primary">More Details</a>
+          <div class="icons mt-3">
             <a id="like" href="{% url 'like' operation='like' pk=img.id%}" style="color:inherit;"><i class="far fa-heart fa-2x ml-4"></i></a>
             <a href="{% url 'comment' pk=img.id %}" style="color:inherit;"><i class="far fa-comment fa-2x ml-4"></i></a>
             <a href="#" style="color:inherit;"><i class="far fa-bookmark fa-2x float-right mr-4"></i></a>
@@ -44,10 +44,6 @@
            <style media="screen">
 
            </style>
-
-           <div class="card-footer">
-             <p><a href="{% url 'comment' pk=img.id %}">Add comment</a></p>
-           </div>
 
         </div>
 
