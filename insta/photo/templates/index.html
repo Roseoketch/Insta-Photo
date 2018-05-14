@@ -4,11 +4,13 @@
   <div class="row mt-5">
 
     <div class="col-md-8">
-      <p>Hello <b>{{user | title}}</b> <b> Welcome to Instagram</b><a href="{% url 'edit' %}" class="btn btn-primary">Create Profile</a> to Continue.</p>
+      <p style="font-family: 'Forum', cursive;
+ font-size:25px;">Hello <b>{{user | title}}</b> <b> Welcome to Instagram</b><a href="{% url 'edit' %}" class="btn btn-primary">Create Profile</a> to Continue.</p>
       {% for img in images %} {% if img.image %}
       <div class="card">
 
-        <div class="card-header">
+        <div class="card-header" style="font-family: 'Forum', cursive;
+">
           <img src="{{img.profile.profilePic.url}}" class="img-fluid rounded-circle" style="width:10%;height:10%"> {% if profile.user.id == img.user.id %}
           <a href="{% url 'profile' %}">{{img.user.username}}</a> {% else %}
           <a href="{% url 'yourprofile' pk=img.user.id %}">{{img.user.username}}</a> {% endif %}
@@ -18,7 +20,7 @@
           <img src="{{img.image.url}}" alt="" class="img-fluid" style="width:80%; height:100%">
           <hr>
 
-          <div class="icons mt-3"><a href="{% url 'comment' pk=img.id %}" class="btn btn-primary far fa-comment fa-2x ml-4"></a>
+          <div class="icons mt-3"><a href="{% url 'comment' pk=img.id %}" class="btn btn-primary"   class="far fa-comment fa-2x ml-4">Comment</a>
             <a id="like" href="{% url 'like' operation='like' pk=img.id%}" style="color:inherit;"><i class="far fa-heart fa-2x ml-4"></i></a>
             <!-- <a href="{% url 'comment' pk=img.id %}" style="color:inherit;"><i class="far fa-comment fa-2x ml-4"></i></a> -->
             <a href="#" style="color:inherit;"><i class="far fa-bookmark fa-2x float-right mr-4"></i></a>
