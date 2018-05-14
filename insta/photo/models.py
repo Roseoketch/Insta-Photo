@@ -74,7 +74,7 @@ class Comment(models.Model):
     comment_date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User)
     image = models.ForeignKey(Image,on_delete=models.CASCADE)
-    post = HTMLField()
+    
 
     def __str__(self):
         return self.comments

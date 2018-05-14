@@ -7,14 +7,13 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta http-equiv="X-UA-Compatible" content="ie=edge">
    {% if title %}
-       <title>{{title}}</title>
+       <title>Instagram -{{title}}</title>
        {% else %}
-           <title>Insta-Gram</title>
+           <title>Instagram</title>
        {% endif %}
 
        {% block styles %}
            {% bootstrap_css %}
-           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
            <link rel="stylesheet" href="{% static 'css/base.css' %}">
        {% endblock %}
    </head>
@@ -22,6 +21,7 @@
        {% block content %}
        {% include "navbar.html" %}
        {% endblock %}
+
        {% block scripts %}
            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
            <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>

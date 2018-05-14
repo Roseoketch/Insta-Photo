@@ -10,34 +10,44 @@
       <div class="card">
         <div class="card-header">
           <img src="{{img.profile.profilePic.url}}" class="img-fluid rounded-circle" style="width:10%;height:10%"> {% if profile.user.id == img.user.id %}
+          <br>
           <a href="{% url 'profile' %}">{{img.user.username}}</a> {% else %}
           <a href="{% url 'yourprofile' pk=img.user.id %}">{{img.user.username}}</a> {% endif %}
         </div>
+
         <div class="card-body">
-          <img src="{{img.image.url}}" alt="" class="img-fluid" style="width:200%; height:200%">
+          <img src="{{img.image.url}}" alt="" class="img-fluid" style="width:80%; height:100%">
           <hr>
+
           <div class="icons mt-3">
-            <a id="like" href="{% url 'like' operation='like' pk=img.id%}" style="color:inherit;">
-                                                                        <i class="far fa-heart fa-2x ml-4"></i>
-                                                                </a>
-
+            <a id="like" href="{% url 'like' operation='like' pk=img.id%}" style="color:inherit;"><i class="far fa-heart fa-2x ml-4"></i></a>
             <a href="{% url 'comment' pk=img.id %}" style="color:inherit;"><i class="far fa-comment fa-2x ml-4"></i></a>
-
             <a href="#" style="color:inherit;"><i class="far fa-bookmark fa-2x float-right mr-4"></i></a>
           </div>
-          <br> {% if img.likes >= 1 %}
+          <br>
+
+           {% if img.likes >= 1 %}
+
           <div class="row">
             <h5 style="padding:8px; color:red;"><b>{{img.likes}} likes</b></h5>
           </div>
+
           {% endif %}
           <div class="row">
             <h5 style="padding: 8px"><a href="{% url 'yourprofile' pk=img.user.id %}"><b>{{img.user.username}}</b></a> {{img.caption}}</h5>
           </div>
+
           <h6>{{img.upload_date | timesince}} ago</h6>
           <hr> {% for comment in comments %} {% if img.id == comment.image.id %}
           <p><b>{{comment.user}}</b> {{comment.comments}}</p>
           {% endif %} {% endfor %}
+
+
+           <style media="screen">
+
+           </style>
         </div>
+
         <div class="card-footer">
           <p><a href="{% url 'comment' pk=img.id %}">Add comment</a></p>
         </div>

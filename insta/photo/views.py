@@ -6,19 +6,18 @@ from .forms import EditProfileForm,UploadForm,CommentForm
 from django.contrib.auth.models import User
 
 # Create your views here.
-@login_required(login_url='/accounts/login/')
+# @login_required(login_url='/accounts/login/')
 def home(request):
-    # title = 'Instagram'
-    # current_user = request.user
-    # profile = Profile.get_profile()
-    # image = Image.get_images()
-    # comments = Comment.get_comment()
-    return render(request,'index.html', )
-    # ,{"title":title,
-    #                                     "profile":profile,
-    #                                     "comments":comments,
-    #                                     "current_user":current_user,
-    #                                     "images":image,})
+    title = 'Instagram'
+    current_user = request.user
+    profile = Profile.get_profile()
+    image = Image.get_images()
+    comments = Comment.get_comment()
+    return render(request,'index.html',{"title":title,
+                                        "profile":profile,
+                                        "comments":comments,
+                                        "current_user":current_user,
+                                        "images":image,})
 
 @login_required(login_url='/accounts/login/')
 def profile(request):
@@ -74,7 +73,7 @@ def upload(request):
                     return redirect('home')
             else:
                 form = UploadForm()
-            return render(request,'upload/new.html',{"title":title,
+            return render(request,'upload.html',{"title":title,
                                                     "user":current_user,
                                                     "form":form})
 
