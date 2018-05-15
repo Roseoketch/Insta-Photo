@@ -37,7 +37,7 @@ def profile(request):
 def settings(request):
     title = 'Instagram'
     settings = Profile.get_profile()
-    return render(request,'welcome.html',{"settings":settings,
+    return render(request,'profile/welcome.html',{"settings":settings,
                                                     "title":title,})
 
 @login_required(login_url='/accounts/login/')
