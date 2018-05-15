@@ -16,3 +16,21 @@
 * Follow other users and see their pictures on my timeline.
 
 * Like a picture and comment on it.
+
+## Technologies Used
+
+* Python3.6
+* Django
+* Bootstrap
+* Postgres Database
+* Css
+* HTML
+
+## Deployment
+
+* Heroku
+
+## License
+
+#### This is an opensource software therefore the license is MIT 
+#### Copyright (c) 2018 Legacy Softwares
