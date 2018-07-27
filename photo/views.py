@@ -6,7 +6,7 @@ from .forms import EditProfileForm,UploadForm,CommentForm
 from django.contrib.auth.models import User
 
 # Create your views here.
-# @login_required(login_url='/accounts/login/')
+@login_required(login_url='/accounts/login/')
 def home(request):
     title = 'Instagram'
     current_user = request.user
@@ -135,3 +135,36 @@ def like(request,operation,pk):
         image.likes -= 1
         image.save()
     return redirect('home')
+
+
+@login_required(login_url='/accounts/login')
+def follow(request, id):
+    '''
+    View function add frofiles of other users to your timeline
+    '''
+    current_user = request.user
+    follow_profile = Profile.objects.get(id=id)
+    check_if_following = Follow.objects.filter(
+        user=current_user, profile=follow_profile).count()
+    if check_if_following == 0:
+        following = Follow(user=current_user, profile=follow_profile)
+        following.save()
+    else:
+        pass
+    return redirect(home)
+
+
+@login_required(login_url='/accounts/login')
+def unfollow(request, id):
+    '''
+    View function unfollow other users
+    '''
+    current_user = request.user
+    follow_profile = Profile.objects.get(id=id)
+
+    following = Follow.objects.filter(
+        user=current_user, profile=follow_profile)
+    # following = Follow(user=current_user, profile=follow_profile)
+    for item in following:
+        item.delete()
+    return redirect(home)
